@@ -1,14 +1,9 @@
-# Reproducible Research:  Project 1
-
-## Loading libraries and data
-```{r}
 library(ggplot2)
 library(dplyr)
 activity <- read.csv("activity.csv")
-```
 
-## 1. What is mean total number of steps taken per day?
-```{r}
+# 1.
+
 stepsPerDay <- activity %>%
         group_by(date) %>%
         summarize(sumsteps = sum(steps, na.rm = TRUE)) 
@@ -19,10 +14,9 @@ meanPreNA <- round(mean(stepsPerDay$sumsteps))
 medianPreNA <- round(median(stepsPerDay$sumsteps))
 print(paste("The mean is: ", meanPreNA))
 print(paste("The median is: ", medianPreNA))
-```
 
-## 2. What is the average daily activity pattern?
-```{r}
+# 2.
+
 stepsPerInterval <- activity %>%
         group_by(interval) %>%
         summarize(meansteps = mean(steps, na.rm = TRUE))
@@ -32,27 +26,16 @@ plot(stepsPerInterval$meansteps ~ stepsPerInterval$interval,
 
 print(paste("5-Minute Interval containing the most steps on average: ",stepsPerInterval$interval[which.max(stepsPerInterval$meansteps)]))
 print(paste("Average steps for that interval: ",round(max(stepsPerInterval$meansteps))))
-```
 
-## 3. Imputing missing values
-### - Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
-```{r}
+# 3.
+
 print(paste("The total number of rows with NA is: ",sum(is.na(activity$steps))))
-```
-
-### - Devise a strategy for filling in all of the missing values in the dataset. 
-### - Create a new dataset that is equal to the original dataset but with the missing data filled in.
-```{r}
 activityNoNA <- activity  
 for (i in 1:nrow(activity)){
         if(is.na(activity$steps[i])){
                 activityNoNA$steps[i]<- stepsPerInterval$meansteps[activityNoNA$interval[i] == stepsPerInterval$interval]
         }
 }
-```
-
-### - Make a histogram of the total number of steps taken each day.
-```{r}
 stepsPerDay <- activityNoNA %>%
         group_by(date) %>%
         summarize(sumsteps = sum(steps, na.rm = TRUE)) 
@@ -63,10 +46,9 @@ meanPostNA <- round(mean(stepsPerDay$sumsteps), digits = 2)
 medianPostNA <- round(median(stepsPerDay$sumsteps), digits = 2)
 print(paste("The mean is: ", mean(meanPostNA)))
 print(paste("The median is: ", median(medianPostNA)))
-```
 
-### 4. Are there differences in activity patterns between weekdays and weekends?
-```{r}
+# 4.
+
 activityDoW <- activityNoNA
 activityDoW$date <- as.Date(activityDoW$date)
 activityDoW$day <- ifelse(weekdays(activityDoW$date) %in% c("Saturday", "Sunday"), "weekend", "weekday")
@@ -94,6 +76,6 @@ g + geom_line() + facet_grid (day~.) +
         labs(y = "Number of Steps") + labs(x = "Interval") + 
         ggtitle("Average Number of Steps: Weekday vs. Weekend") + 
         theme(plot.title = element_text(hjust = 0.5))
-```
 
-# END OF THE FILE
+
+

@@ -1,3 +1,10 @@
+---
+title: "PA1_template"
+output: html_document
+date: "2023-02-21"
+output: md_document
+---
+
 # Reproducible Research:  Project 1
 
 ## Loading libraries and data
